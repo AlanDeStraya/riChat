@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang='en'>
+  <head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width'>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      h1 {
+        text-align: center;
+        height: 10vh;
+        background-color: #100;
+        color: #aaa;
+        font-family: sans-serif;
+        padding-top: 1.5rem;
+      }
+      .chat-window {
+        height: 80vh;
+        overflow: auto;
+        background-color: #010;
+        color: #aaa;
+      }
+      form {
+        display: flex;
+        height: 10vh;
+        align-items: center;
+        background-color: #001;
+        color: #aaa;
+      }
+      .chat-input {
+        width: 80vw - 150px;
+        background-color: #002;
+        color: #aaa;
+      }
+      .chat-submit {
+        width: 150px;
+      }
+    </style>
+    <title>Alan and Riana's Chat App</title>
+  </head>
+  <body>
+    <div id="container">
+      <h1>
+        Alan and Riana's Chat app
+      </h1>
+      <div id="chatSection">
+        <div class="chat-window"></div>
+        <form class="chat-form">
+          <label class="chat-label">
+            Enter a message:
+            <input type="text" class="chat-input" />
+          </label>
+          <input type="submit" class="chat-submit" value="enter" />
+        </form>
+      </div>
+    </div>
+
+    <script src="socket.io/socket.io.js"></script>
+    <script src="client.js"></script>
+  </body>
+</html>
