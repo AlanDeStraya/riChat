@@ -14,6 +14,11 @@ io.on('connection', socket => {
     console.log('From client: ', message);
     io.emit('chat', message);
   });
+
+  socket.on('username', name => {
+    console.log('New user: ', name);
+    io.emit('username', name);
+  });
 });
 
 server.listen(port, () => {

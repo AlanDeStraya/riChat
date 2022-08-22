@@ -36,7 +36,7 @@
         justify-content: space-around;
         flex-grow: 2;
       }
-      .chat-window {
+      #chat-window {
         overflow: auto;
         background-color: #010;
         color: var(--text);
@@ -52,12 +52,12 @@
       label {
         padding: 3px;
       }
-      .chat-input {
+      .input {
         background-color: #002;
         color: var(--text);
         flex-grow: 3;
       }
-      .chat-submit {
+      .submit {
         flex-grow: 1;
       }
     </style>
@@ -68,13 +68,22 @@
       <h1>
         Alan and Riana's Chat app
       </h1>
+
+      <form id='name-form'>
+        <label for='name-input'>Username: </label>
+        <input class='input' id='name-input'>
+        <input class='submit' type='submit' value='enter'>
+      </form>
+
       <div id="chatSection">
-        <div class="chat-window"></div>
-        <form class="chat-form">
-          <label class="chat-label" for='chat-input'>Message: </label>
-            <input id='chat-input' type="text" class="chat-input" />
-          <input type="submit" class="chat-submit" value="enter" />
+        <div id="chat-window"></div>
+        
+        <form id='chat-form'>
+          <label for='chat-input'>Message: </label>
+          <input class="input" id='chat-input' />
+          <input class="submit" type="submit" value="enter" />
         </form>
+
       </div>
     </div>
 
