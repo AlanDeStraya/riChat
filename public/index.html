@@ -2,7 +2,10 @@
 <html lang='en'>
   <head>
     <meta charset='utf-8'>
-    <meta name='viewport' content='width=device-width'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <script defer src="socket.io/socket.io.js"></script>
+    <script defer src="client.js"></script>
+
     <style>
       :root {
         --text: #bbb;
@@ -18,68 +21,54 @@
         flex-direction: column;
         height: 100vh;
       }
-      #container {
-        height: 100vh;
-        display: flex;
-        flex-direction: column;
-      }
       h1 {
         text-align: center;
         background-color: #100;
         color: var(--text);
         padding: 10px;
-      }
-      #chatSection {
-        flex-grow: 2;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
-        flex-grow: 2;
+        height: 50px;
       }
       #chat-window {
-        overflow: auto;
+        overflow-y: auto;
         background-color: #010;
         color: var(--text);
         padding: 5px;
-        flex-grow: 2;
+        height: calc(100vh - 80px);
       }
       form {
         display: flex;
         align-items: center;
         background-color: #001;
         color: var(--text);
-      }
-      label {
-        padding: 3px;
+        height: 30px;
       }
       .input {
         background-color: #002;
         color: var(--text);
         flex-grow: 3;
       }
-      .submit {
-        flex-grow: 1;
+      #user-list {
+        position: absolute;
+        top: 50px;
+        right: 0;
+        background-color: #222;
+        color: var(--text);
+        padding: 10px;
+        display: none;
+        width: 250px;
+        margin: 0 auto;
       }
     </style>
-    <title>Alan and Riana's Chat App</title>
+    <title>Chat Room</title>
   </head>
   <body>
-    <div id="container">
-      <h1>
-        Alan and Riana's Chat app
-      </h1>
-      <div id="chatSection">
-        <div id="chat-window"></div>
-        <form id='chat-form'>
-          <label for='chat-input'>Message: </label>
-          <input class="input" id='chat-input' />
-          <input class="submit" type="submit" value="enter" />
-        </form>
-
-      </div>
-    </div>
-
-    <script src="socket.io/socket.io.js"></script>
-    <script src="client.js"></script>
+    <h1 id='check-users'>Chat Room</h1>
+    <div id="chat-window"></div>
+    <form id='chat-form' autocomplete='off'>
+      <label for='chat-input'>&nbsp;Message:&nbsp;</label>
+      <input class="input" id='chat-input' />
+      <input class="submit" type="submit" value=" send " />
+    </form>
+    <div id='user-list'></div>
   </body>
 </html>
