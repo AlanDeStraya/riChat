@@ -2,12 +2,14 @@ const socket = io();
 const chatWindow = document.getElementById('chat-window');
 const chatForm = document.querySelector('#chat-form');
 const chatInput = document.querySelector('#chat-input');
+const checkMessagesButton = document.getElementById('chat-label');
 const checkUserButton = document.getElementById('check-users');
 const userList = document.getElementById('user-list');
 let list;
 const username = prompt('Enter your username');
 renderMessage('You joined');
 socket.emit('new-user', username);
+
 if(username === 'Pookie') {
   renderMessage('Pookie-detection-bot: I love you SMASM');
 } else if(username === 'Riana') {
@@ -23,12 +25,13 @@ chatForm.addEventListener('submit', event => {
 });
 
 checkUserButton.addEventListener('click', checkUsers);
+checkMessagesButton.addEventListener('click', checkMessages);
 
 function renderMessage(message) {
-  const div = document.createElement('div');
-  div.classList.add('render-message');
-  div.innerText = message;
-  chatWindow.appendChild(div);
+  const msgDiv = document.createElement('div');
+  msgDiv.classList.add('render-message');
+  msgDiv.innerText = message;
+  chatWindow.appendChild(msgDiv);
   scrollToBottom();
 };
 function scrollToBottom() {
@@ -73,5 +76,14 @@ function checkUsers(str) {
   }
 };
 
-socket.on('user-list', list => {
+function checkMessages() {
+  socket.emit('check-messages');
+};
+
+socket.on('message-history', obj => {
+  let msgHist = ''
+  for (let m in obj) {
+    msgHist += `${obj[m].sender}: ${obj[m].message} at ${obj[m].timestamp}\n`;
+  }
+  chatWindow.innerText = msgHist;
 });
