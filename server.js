@@ -7,17 +7,24 @@ const path = require('path');
 
 app.use(express.static(path.join(__dirname + '/public')));
 
+const users = {};
+const messages = {};
+let messageIndex = 0;
+
 io.on('connection', socket => {
-  console.log('A client connected');
-
-  socket.on('chat', message => {
-    console.log('From client: ', message);
-    io.emit('chat', message);
+  socket.on('new-user', name => {
+    users[socket.id] = name;
+    socket.broadcast.emit('user-connected', name);
+    socket.emit('all-users', users);
   });
-
-  socket.on('username', name => {
-    console.log('New user: ', name);
-    io.emit('username', name);
+  socket.on('send-chat-message', message => {
+    messages[messageIndex] = message;
+    messageIndex ++;
+    socket.broadcast.emit('chat-message', { message: message, name: users[socket.id] });
+  });
+  socket.on('disconnect', () => {
+    socket.broadcast.emit('user-disconnected', users[socket.id]);
+    delete users[socket.id];
   });
 });
 

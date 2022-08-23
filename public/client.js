@@ -1,43 +1,50 @@
 const socket = io();
-const chatWindow = document.querySelector('#chat-window');
+const chatWindow = document.getElementById('chat-window');
 const chatForm = document.querySelector('#chat-form');
 const chatInput = document.querySelector('#chat-input');
-const nameForm = document.querySelector('#name-form');
-const nameInput = document.querySelector('#name-input');
-let username;
-
-nameForm.addEventListener('submit', event => {
-  event.preventDefault();
-  username = nameInput.value;
-  socket.emit('username', '>> ' + username + ' is online');
-  nameInput.value = ''; 
-});
+const username = prompt('Enter your username');
+renderMessage('You joined');
+socket.emit('new-user', username);
 
 chatForm.addEventListener('submit', event => {
   event.preventDefault();
-  socket.emit('chat', username + ': ' + chatInput.value);
+  const message = chatInput.value;
+  renderMessage(`You: ${message}`);
+  socket.emit('send-chat-message', message);
   chatInput.value = '';
 });
 
-const renderMessage = message => {
+function renderMessage(message) {
   const div = document.createElement('div');
   div.classList.add('render-message');
   div.innerText = message;
   chatWindow.appendChild(div);
 };
 
-const handleNewUser = name => {
-  const div = document.createElement('div');
-  div.classList.add('render-message');
-  div.innerText = name;
-  chatWindow.appendChild(div);
-  //post in list of users
+socket.on('user-connected', username => {
+  renderMessage(`${username} connected`)
+});
+
+socket.on('all-users', users => {
+  const userString = objToString(users);
+  renderMessage(userString);
+});
+
+socket.on('chat-message', data => {
+  renderMessage(`${data.name}: ${data.message}`)
+});
+
+socket.on('user-disconnected', username => {
+  renderMessage(`${username} disconnected`)
+});
+
+
+function objToString(object) {
+  let str = '';
+  for (let user in object) {
+    if (object.hasOwnProperty(user)) {
+      str += user + ': ' + object[user] + '\n';
+    }
+  }
+  return str;
 };
-
-socket.on('chat', message => {
-  renderMessage(message);
-});
-
-socket.on('username', name => {
-  handleNewUser(name);
-});
