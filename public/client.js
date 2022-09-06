@@ -47,7 +47,7 @@ socket.on('all-users', users => {
 });
 
 socket.on('chat-message', data => {
-  renderMessage(`${data.name}: ${data.message} [${data.msgNum}]`)
+  renderMessage(`${data.name}: ${data.message}`)
 });
 
 socket.on('user-disconnected', username => {
