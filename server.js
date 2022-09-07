@@ -38,6 +38,12 @@ io.on('connection', socket => {
   socket.on('check-messages', () => {
     socket.emit('message-history', messages);
   });
+  socket.on('typing', name => {
+    socket.broadcast.emit('isTyping', name);
+  })
+  socket.on('notTyping', name => {
+    socket.broadcast.emit('isntTyping', name);
+  });
 });
 
 server.listen(port, () => {

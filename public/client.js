@@ -6,6 +6,8 @@ const checkMessagesButton = document.getElementById('chat-label');
 const checkUserButton = document.getElementById('check-users');
 const userList = document.getElementById('user-list');
 let list;
+let typing = false;
+let timer;
 const username = prompt('Enter your username');
 renderMessage('You joined');
 socket.emit('new-user', username);
@@ -24,8 +26,67 @@ chatForm.addEventListener('submit', event => {
   chatInput.value = '';
 });
 
+chatInput.addEventListener('keypress', e => {
+  if(typing) {
+    clearTimeout(timer);
+    timer = setTimeout(stopTyping, 7000);
+  } else {
+    typing = true;
+    socket.emit('typing', username);
+    let timer = setTimeout(stopTyping, 7000);
+  }
+});
+
+function stopTyping() {
+  typing = false;
+  socket.emit('notTyping', username);
+};
+
 checkUserButton.addEventListener('click', checkUsers);
 checkMessagesButton.addEventListener('click', checkMessages);
+
+
+socket.on('user-connected', username => {
+  renderMessage(`${username} connected`);
+});
+
+socket.on('all-users', users => {
+  userList.innerText = listOnlineUsers(users);
+});
+
+socket.on('chat-message', data => {
+  renderMessage(`${data.name}: ${data.message}`);
+});
+
+socket.on('user-disconnected', username => {
+  renderMessage(`${username} disconnected`);
+});
+
+socket.on('message-history', obj => {
+  let msgHist = ''
+  for (let m in obj) {
+    msgHist += `${obj[m].sender}: ${obj[m].message} at ${obj[m].timestamp}\n`;
+  }
+  chatWindow.innerText = msgHist;
+});
+
+socket.on('isTyping', name => {
+  renderMessage(`${name} is typing...`);
+});
+
+function typingNotification(name) {
+  const ellipsisEl = document.createElement('p');
+  ellipsisEl.classList.add(`${name}`, 'ellipsis');
+  ellipsisEl.innerText = `${name} is typing...`;
+  chatWindow.appendChild(ellipsisEl);
+  scrollToBottom();
+};
+
+function removeTypingNotification(name) {
+  const ellipsisEl = document.querySelector(`${name}`);
+  ellipsisEl.remove();
+  scrollToBottom();
+}
 
 function renderMessage(message) {
   const msgDiv = document.createElement('div');
@@ -37,23 +98,6 @@ function renderMessage(message) {
 function scrollToBottom() {
   chatWindow.scrollTop = chatWindow.scrollHeight;
 };
-
-socket.on('user-connected', username => {
-  renderMessage(`${username} connected`)
-});
-
-socket.on('all-users', users => {
-  userList.innerText = listOnlineUsers(users);
-});
-
-socket.on('chat-message', data => {
-  renderMessage(`${data.name}: ${data.message}`)
-});
-
-socket.on('user-disconnected', username => {
-  renderMessage(`${username} disconnected`)
-});
-
 
 function listOnlineUsers(object) {
   let str = '\n >> Users online: \n';
@@ -80,10 +124,3 @@ function checkMessages() {
   socket.emit('check-messages');
 };
 
-socket.on('message-history', obj => {
-  let msgHist = ''
-  for (let m in obj) {
-    msgHist += `${obj[m].sender}: ${obj[m].message} at ${obj[m].timestamp}\n`;
-  }
-  chatWindow.innerText = msgHist;
-});
