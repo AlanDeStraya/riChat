@@ -71,11 +71,13 @@ socket.on('message-history', obj => {
 });
 
 socket.on('isTyping', name => {
-  renderMessage(`${name} is typing...`);
+  typingNotification();
+  console.log('starting');
 });
 
 socket.on('isntTyping', name => {
   removeTypingNotification();
+  console.log('stopping');
 });
 
 function typingNotification(name) {
