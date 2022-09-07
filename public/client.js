@@ -74,6 +74,10 @@ socket.on('isTyping', name => {
   renderMessage(`${name} is typing...`);
 });
 
+socket.on('isntTyping', name => {
+  removeTypingNotification();
+});
+
 function typingNotification(name) {
   const ellipsisEl = document.createElement('p');
   ellipsisEl.classList.add(`${name}`, 'ellipsis');
@@ -86,7 +90,7 @@ function removeTypingNotification(name) {
   const ellipsisEl = document.querySelector(`${name}`);
   ellipsisEl.remove();
   scrollToBottom();
-}
+};
 
 function renderMessage(message) {
   const msgDiv = document.createElement('div');
