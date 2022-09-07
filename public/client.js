@@ -6,7 +6,7 @@ const checkMessagesButton = document.getElementById('chat-label');
 const checkUserButton = document.getElementById('check-users');
 const userList = document.getElementById('user-list');
 let list;
-let typing = false;
+let typing;
 let timer;
 const username = prompt('Enter your username');
 renderMessage('You joined');
@@ -33,7 +33,7 @@ chatInput.addEventListener('keypress', e => {
   } else {
     typing = true;
     socket.emit('typing', username);
-    let timer = setTimeout(stopTyping, 7000);
+    timer = setTimeout(stopTyping, 7000);
   }
 });
 
@@ -46,8 +46,8 @@ checkUserButton.addEventListener('click', checkUsers);
 checkMessagesButton.addEventListener('click', checkMessages);
 
 
-socket.on('user-connected', username => {
-  renderMessage(`${username} connected`);
+socket.on('user-connected', conname => {
+  renderMessage(`${conname} connected`);
 });
 
 socket.on('all-users', users => {
@@ -71,13 +71,13 @@ socket.on('message-history', obj => {
 });
 
 socket.on('isTyping', name => {
-  typingNotification();
   console.log('starting');
+  typingNotification();
 });
 
 socket.on('isntTyping', name => {
-  removeTypingNotification();
   console.log('stopping');
+  removeTypingNotification();
 });
 
 function typingNotification(name) {
@@ -89,7 +89,7 @@ function typingNotification(name) {
 };
 
 function removeTypingNotification(name) {
-  const ellipsisEl = document.querySelector(`${name}`);
+  const ellipsisEl = document.querySelector(`p.${name}`);
   ellipsisEl.remove();
   scrollToBottom();
 };
