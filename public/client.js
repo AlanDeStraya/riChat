@@ -1,5 +1,7 @@
 const socket = io();
 const chatWindow = document.getElementById('chat-window');
+const chatWindowMessages = document.getElementById('chat-window-messages');
+const chatWindowTyping = document.getElementById('chat-window-typing');
 const chatForm = document.querySelector('#chat-form');
 const chatInput = document.querySelector('#chat-input');
 const checkMessagesButton = document.getElementById('chat-label');
@@ -49,7 +51,7 @@ socket.on('message-history', obj => {
   for (let m in obj) {
     msgHist += `${obj[m].sender}: ${obj[m].message} at ${obj[m].timestamp}\n`;
   }
-  chatWindow.innerText = msgHist;
+  chatWindowMessages.innerText = msgHist;
 });
 
 socket.on('isTyping', name => {
@@ -89,7 +91,7 @@ function typingNotification(name) {
   const ellipsisEl = document.createElement('p');
   ellipsisEl.classList.add(`${name}`, 'ellipsis');
   ellipsisEl.innerText = `${name} is typing...`;
-  chatWindow.appendChild(ellipsisEl);
+  chatWindowTyping.appendChild(ellipsisEl);
   scrollToBottom();
 };
 
@@ -101,6 +103,7 @@ function removeTypingNotification(name) {
 
 function submitChat(event) {
   event.preventDefault();
+  stopTyping();
   const message = chatInput.value;
   renderMessage(`You: ${message}`);
   socket.emit('send-chat-message', message);
@@ -111,7 +114,7 @@ function renderMessage(message) {
   const msgDiv = document.createElement('div');
   msgDiv.classList.add('render-message');
   msgDiv.innerText = message;
-  chatWindow.appendChild(msgDiv);
+  chatWindowMessages.appendChild(msgDiv);
   scrollToBottom();
 };
 function scrollToBottom() {
