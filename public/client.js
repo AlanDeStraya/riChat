@@ -71,9 +71,8 @@ function stopTyping() {
   socket.emit('notTyping', username);
 };
 
-function handleTyping(e) {
-  if(e.code === 'Enter') {
-    stopTyping();
+function handleTyping(event) {
+  if(event.code === 'Enter') {
     clearTimeout(timer);
     return;
   }
