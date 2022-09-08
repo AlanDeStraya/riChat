@@ -28,7 +28,7 @@ checkUserButton.addEventListener('click', checkUsers);
 
 checkMessagesButton.addEventListener('click', checkMessages);
 
-
+console.log('running');
 
 socket.on('user-connected', name => {
   renderMessage(`${name} connected`);
