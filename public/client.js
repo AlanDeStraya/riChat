@@ -56,19 +56,15 @@ socket.on('message-history', obj => {
 
 socket.on('isTyping', name => {
   console.log('starting');
-  typingNotification();
+  typingNotification(name);
 });
 
 socket.on('isntTyping', name => {
   console.log('stopping');
-  removeTypingNotification();
+  removeTypingNotification(name);
 });
 
 
-
-function logg() {
-  console.log(typing);
-};
 
 function stopTyping() {
   typing = false;
