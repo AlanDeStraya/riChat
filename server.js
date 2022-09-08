@@ -39,9 +39,11 @@ io.on('connection', socket => {
     socket.emit('message-history', messages);
   });
   socket.on('typing', name => {
+    users[socket.id].typing = true;
     socket.broadcast.emit('isTyping', name);
-  })
+  });
   socket.on('notTyping', name => {
+    users[socket.id].typing = false;
     socket.broadcast.emit('isntTyping', name);
   });
 });

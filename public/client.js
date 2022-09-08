@@ -18,36 +18,20 @@ if(username === 'Pookie') {
   renderMessage('Riana-detection-bot: You are the love of my life');
 }
 
-chatForm.addEventListener('submit', event => {
-  event.preventDefault();
-  const message = chatInput.value;
-  renderMessage(`You: ${message}`);
-  socket.emit('send-chat-message', message);
-  chatInput.value = '';
-});
+chatForm.addEventListener('submit', submitChat);
 
-chatInput.addEventListener('keypress', e => {
-  if(typing) {
-    clearTimeout(timer);
-    timer = setTimeout(stopTyping, 7000);
-  } else {
-    typing = true;
-    socket.emit('typing', username);
-    timer = setTimeout(stopTyping, 7000);
-  }
-});
-
-function stopTyping() {
-  typing = false;
-  socket.emit('notTyping', username);
-};
+chatInput.addEventListener('keypress', handleTyping);
 
 checkUserButton.addEventListener('click', checkUsers);
+
 checkMessagesButton.addEventListener('click', checkMessages);
 
+setInterval(logg, 2000);
 
-socket.on('user-connected', conname => {
-  renderMessage(`${conname} connected`);
+
+
+socket.on('user-connected', name => {
+  renderMessage(`${name} connected`);
 });
 
 socket.on('all-users', users => {
@@ -58,8 +42,8 @@ socket.on('chat-message', data => {
   renderMessage(`${data.name}: ${data.message}`);
 });
 
-socket.on('user-disconnected', username => {
-  renderMessage(`${username} disconnected`);
+socket.on('user-disconnected', name => {
+  renderMessage(`${name} disconnected`);
 });
 
 socket.on('message-history', obj => {
@@ -80,6 +64,33 @@ socket.on('isntTyping', name => {
   removeTypingNotification();
 });
 
+
+
+function logg() {
+  console.log(typing);
+};
+
+function stopTyping() {
+  typing = false;
+  socket.emit('notTyping', username);
+};
+
+function handleTyping(e) {
+  if(e.code === 'Enter') {
+    stopTyping();
+    clearTimeout(timer);
+    return;
+  }
+  if(typing) {
+    clearTimeout(timer);
+    timer = setTimeout(stopTyping, 7000);
+  } else {
+    typing = true;
+    socket.emit('typing', username);
+    timer = setTimeout(stopTyping, 7000);
+  }
+}
+
 function typingNotification(name) {
   const ellipsisEl = document.createElement('p');
   ellipsisEl.classList.add(`${name}`, 'ellipsis');
@@ -93,6 +104,14 @@ function removeTypingNotification(name) {
   ellipsisEl.remove();
   scrollToBottom();
 };
+
+function submitChat(event) {
+  event.preventDefault();
+  const message = chatInput.value;
+  renderMessage(`You: ${message}`);
+  socket.emit('send-chat-message', message);
+  chatInput.value = '';
+}
 
 function renderMessage(message) {
   const msgDiv = document.createElement('div');
