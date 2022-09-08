@@ -26,8 +26,6 @@ checkUserButton.addEventListener('click', checkUsers);
 
 checkMessagesButton.addEventListener('click', checkMessages);
 
-setInterval(logg, 2000);
-
 
 
 socket.on('user-connected', name => {
