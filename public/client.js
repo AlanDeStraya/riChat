@@ -55,12 +55,10 @@ socket.on('message-history', obj => {
 });
 
 socket.on('isTyping', name => {
-  console.log('starting');
   typingNotification(name);
 });
 
 socket.on('isntTyping', name => {
-  console.log('stopping');
   removeTypingNotification(name);
 });
 
@@ -102,7 +100,9 @@ function removeTypingNotification(name) {
 
 function submitChat(event) {
   event.preventDefault();
-  stopTyping();
+  if(typing) {
+    stopTyping();
+  }
   const message = chatInput.value;
   renderMessage(`You: ${message}`);
   socket.emit('send-chat-message', message);
