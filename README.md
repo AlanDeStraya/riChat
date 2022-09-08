@@ -1,7 +1,7 @@
 # RiChat
-Alan and Riana's Chat App
+A & R's CA
 
 ## ToDo
-- work better on mobile (keyboard hides input)
+- work better on mobile (keyboard hides input)/iOS
 - store messages?
-- someone is typing indication 
+- notification?
