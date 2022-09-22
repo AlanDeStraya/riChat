@@ -1,5 +1,5 @@
 # RiChat
-A & R's CA
+A & R's Chat app
 
 ## ToDo
 - work better on mobile (keyboard hides input)/iOS
